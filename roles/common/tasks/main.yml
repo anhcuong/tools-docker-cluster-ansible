@@ -1,0 +1,22 @@
+---
+- include: pkg_install.yml
+  when: ansible_os_family == 'RedHat'
+
+- include: pkg_install_debian.yml
+  when: ansible_os_family == 'Debian'
+
+- include: ulimit.yml
+
+- include: supervisord.yml
+
+- include: boto.yml
+
+# - include: docker_py.yml
+
+# - include: rc_local.yml
+
+# - include: ssl.yml
+
+# - include: users.yml
+
+# - include: resolv.yml

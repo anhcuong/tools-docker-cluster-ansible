@@ -1,3 +1,4 @@
 *.pyc
 hostfile
 .env
+roles/default/*

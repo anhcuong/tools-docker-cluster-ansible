@@ -1,0 +1,9 @@
+---
+- name: deploy root ca
+  sudo: yes
+  copy:
+    src: ssl/cacert.pem
+    dest: /usr/local/share/ca-certificates/cacert.pem
+    owner: root
+  notify:
+    - update-ca-trust

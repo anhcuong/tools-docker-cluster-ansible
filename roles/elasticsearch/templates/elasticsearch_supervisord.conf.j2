@@ -1,0 +1,14 @@
+[program:elasticsearch]
+command= /opt/elasticsearch-{{ elasticsearch_version }}/bin/elasticsearch
+        
+directory=/opt/elasticsearch-{{ marathon_version }}
+autostart=true
+autorestart=true
+startretries=999
+redirect_stderr=True
+nodaemon = False
+debug = False
+stdout_logfile = /var/tmp/elasticsearch.out
+stderr_logfile = /var/tmp/elasticsearch.err
+loglevel = "info"
+stopasgroup=true

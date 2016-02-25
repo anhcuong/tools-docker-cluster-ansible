@@ -1,0 +1,44 @@
+---
+- name: check elasticsearch folder
+  sudo: yes
+  stat: path="/opt/marathon-{{ elasticsearch_version }}"
+  register: check_elasticsearch_path
+  tags:
+    - elasticsearch
+    - bootstrap
+
+- name: Download elasticsearch
+  sudo: yes
+  get_url: url="{{ elasticsearch_download_url }}" dest="/tmp/elasticsearch-{{ elasticsearch_version }}.tar.gz" mode=0644
+  when: check_elasticsearch_path.stat.exists == False
+  register: elasticsearch_archive 
+  tags:
+    - elasticsearch
+    - bootstrap
+
+- name: Unarchive elasticsearch source
+  sudo: yes
+  unarchive:
+    src="/tmp/elasticsearch-{{ elasticsearch_version }}.tar.gz"
+    dest="/opt/"
+    copy=no
+  when: elasticsearch_archive|changed
+  tags:
+    - elasticsearch
+    - bootstrap
+
+- name: config elasticsearch supervisord
+  sudo: yes
+  template: src=elasticsearch_supervisord.conf.j2 dest=/etc/supervisord/elasticsearch.conf
+  notify: restart elasticsearch
+  tags:
+    - elasticsearch
+
+- name: start elasticsearch supervisord
+  sudo: yes
+  supervisorctl: 
+    name: elasticsearch
+    state: present
+    supervisorctl_path: "{{ supervisord_exec_dir }}/supervisorctl"
+  tags:
+    - elasticsearch

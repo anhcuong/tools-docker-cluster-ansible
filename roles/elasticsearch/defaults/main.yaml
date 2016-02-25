@@ -1,0 +1,6 @@
+---
+elasticsearch_version: 2.2.0
+elasticsearch_download_url: https://download.elasticsearch.org/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/2.2.0/elasticsearch-2.2.0.tar.gz
+supervisord_conf_dir: /etc/supervisord
+supervisord_exec_dir: /usr/local/bin
+cluster_name: es-cluster
