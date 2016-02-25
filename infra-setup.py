@@ -1,15 +1,17 @@
 #!/usr/bin/python
 import os, time
 from docker import Client
-import yaml
 from jinja2 import Environment
 from jinja2 import FileSystemLoader
+from sys import argv
 
 current_dir = os.path.dirname(os.path.realpath(__file__))
 tmpl_dir = os.path.join(current_dir, "templates")
 cli = Client(base_url='unix://var/run/docker.sock')
-remote_masters = []
-remote_workers = []
+remote_machines = {
+	'masters': [],
+	'workers': []
+}
 
 def create_control():	
 	print "===Creating ansible control==="
@@ -24,8 +26,9 @@ def create_control():
 	pass
 
 def create_master(m):
+	print m
 	print "===Creating ansible remote - master group==="	
-	for i in range(1, int(m)):
+	for i in range(0, int(m)):
 		print "==Creating master %d==" %i
 		control = cli.create_container(
 			image='anhcuong/ansible-remote', name='ansible_master%d' %i ,			
@@ -37,7 +40,8 @@ def create_master(m):
 
 def create_worker(n):
 	print "===Creating ansible remote - worker group==="
-	for i in range(1, int(n)):
+	print n
+	for i in range(0, int(n)):
 		print "==Creating worker %d==" %i
 		control = cli.create_container(
 			image='anhcuong/ansible-remote', name='ansible_worker%d' %i ,			
@@ -54,15 +58,15 @@ def clean_docker():
 def collect_remote_master_ips():
 	for container in cli.containers():
 		if container["Names"][0].startswith("/ansible_master"):
-			remote_masters.append([container["Names"][0], container["NetworkSettings"]["Networks"]["bridge"]["IPAddress"]])
-	print remote_masters
+			remote_machines["masters"].append([container["Names"][0], container["NetworkSettings"]["Networks"]["bridge"]["IPAddress"]])
+	print remote_machines
 	pass
 
 def collect_remote_worker_ips():
 	for container in cli.containers():
 		if container["Names"][0].startswith("/ansible_worker"):
-			remote_workers.append([container["Names"][0], container["NetworkSettings"]["Networks"]["bridge"]["IPAddress"]])
-	print remote_workers
+			remote_machines["workers"].append([container["Names"][0], container["NetworkSettings"]["Networks"]["bridge"]["IPAddress"]])
+	print remote_machines
 	pass
 
 def render_template(config, template_name, outfile):
@@ -71,15 +75,25 @@ def render_template(config, template_name, outfile):
     with open(outfile, 'w') as f:
         f.write(template.render(config))
 
-if __name__ == "__main__":
-	master_num = os.getenv('MASTER_NUM', 3)
-	worker_num = os.getenv('WORKER_NUM', 0)
-	clean_docker()
-	create_control()
-	create_master(master_num)
-	create_worker(worker_num)
-	print "===Wait for control to collect all remote data==="	
-	time.sleep(5)
-	collect_remote_master_ips()
-	collect_remote_worker_ips()
+def render_hostfile():
 	print "===Rendering hostfile from j2 templates==="	
+	outfile = os.path.join(current_dir, "hostfile")
+	render_template(remote_machines, "hostfile.j2", outfile)
+	print "===The hostfile located at CUR_DIR/hostfile==="
+
+if __name__ == "__main__":
+	if (len(argv)>1 and argv[1] == "destroy"):
+		clean_docker()
+	else:
+		master_num = os.getenv('MASTER_NUM', 3)
+		worker_num = os.getenv('WORKER_NUM', 0)
+		clean_docker()
+		create_control()
+		create_master(master_num)
+		create_worker(worker_num)
+		print "===Wait for control to collect all remote data==="	
+		time.sleep(5)
+		collect_remote_master_ips()
+		collect_remote_worker_ips()
+		render_hostfile()
+	

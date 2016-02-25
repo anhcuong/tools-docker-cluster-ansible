@@ -25,6 +25,11 @@ source .env
 ```sh
 # Create playground for ansible
 make ansible
+
+# Try out ansible commands
+docker exec -it ansible_control bash
+ansible all -m shell -a "ls -la"
+
 ```
 
 ## 

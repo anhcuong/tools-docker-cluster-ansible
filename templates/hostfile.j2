@@ -1,0 +1,7 @@
+[master]
+{% for master in masters %}{{ master[0] }} ansible_host={{ master[1] }}
+{% endfor %}
+
+[worker]
+{% for worker in workers %}{{ worker[0] }} ansible_host={{ worker[1] }}
+{% endfor %}
