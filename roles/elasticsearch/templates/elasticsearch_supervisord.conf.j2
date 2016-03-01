@@ -1,7 +1,6 @@
 [program:elasticsearch]
 command= /opt/elasticsearch-{{ elasticsearch_version }}/bin/elasticsearch
-        
-directory=/opt/elasticsearch-{{ marathon_version }}
+directory=/opt/elasticsearch-{{ elasticsearch_version }}
 autostart=true
 autorestart=true
 startretries=999

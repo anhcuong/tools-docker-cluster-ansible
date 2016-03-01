@@ -8,5 +8,7 @@ ansible:
 	./infra-setup.py
 destroy:
 	./infra-setup.py destroy
+elasticsearch:
+	cp templates/elasticsearch.yml elasticsearch.yml	
 	
 	

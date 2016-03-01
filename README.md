@@ -32,5 +32,12 @@ ansible all -m shell -a "ls -la"
 
 ```
 
-## 
+## Elasticsearch cluster
 
+```sh
+make elasticsearch
+docker exec -it ansible_control bash
+export TERM=xterm
+ansible-playbook elasticsearch.yml
+	 
+```

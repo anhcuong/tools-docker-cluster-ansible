@@ -1,4 +1,0 @@
----
-- include: elasticsearch.yml
-
-# - include: haproxy.yml

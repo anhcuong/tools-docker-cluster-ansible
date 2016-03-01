@@ -1,7 +1,7 @@
 ---
 - name: check elasticsearch folder
   sudo: yes
-  stat: path="/opt/marathon-{{ elasticsearch_version }}"
+  stat: path="/opt/elasticsearch-{{ elasticsearch_version }}"
   register: check_elasticsearch_path
   tags:
     - elasticsearch
