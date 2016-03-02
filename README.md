@@ -35,9 +35,13 @@ ansible all -m shell -a "ls -la"
 ## Elasticsearch cluster
 
 ```sh
+# Create playground for elasticsearch
 make elasticsearch
-docker exec -it ansible_control bash
-export TERM=xterm
-ansible-playbook elasticsearch.yml
-	 
+
+# Get elasticsearch ip from any master ips in hostfile
+export ELASTICSEARCH_IP=$(awk 'NF>1{print $NF}' hostfile | head -1 | cut -d'=' -f 2)
+echo $ELASTICSEARCH_IP
+
+# Try out elasticsearch API
+ curl -XGET "http://$ELASTICSEARCH_IP:9200/_nodes?human&pretty"	 
 ```

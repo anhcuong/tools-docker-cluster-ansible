@@ -1,0 +1,1 @@
+elasticsearch_hosts: {% for master in masters %}{{ master[1] }},{% endfor %}{% for worker in workers %}{{ worker[1] }},{% endfor %}

@@ -9,6 +9,6 @@ ansible:
 destroy:
 	./infra-setup.py destroy
 elasticsearch:
-	cp templates/elasticsearch.yml elasticsearch.yml	
+	docker exec -it ansible_control bash -c "ansible-playbook -e @cluster.yml elasticsearch.yml"
 	
 	

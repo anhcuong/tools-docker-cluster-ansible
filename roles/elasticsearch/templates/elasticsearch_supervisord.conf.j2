@@ -1,5 +1,5 @@
 [program:elasticsearch]
-command= /opt/elasticsearch-{{ elasticsearch_version }}/bin/elasticsearch
+command= /opt/elasticsearch-{{ elasticsearch_version }}/bin/elasticsearch -Des.insecure.allow.root=true -Des.network.host=0.0.0.0 --cluster.name=es-ansible-docker --discovery.zen.ping.multicast.enabled=false --discovery.zen.ping.unicast.hosts={{ elasticsearch_hosts }}
 directory=/opt/elasticsearch-{{ elasticsearch_version }}
 autostart=true
 autorestart=true

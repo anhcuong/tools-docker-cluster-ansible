@@ -1,8 +1,0 @@
-# Install common packages: java python boto
-- hosts: all
-  roles:
-    - common
-
-- hosts: "master:worker"
-  roles:
-    - elasticsearch

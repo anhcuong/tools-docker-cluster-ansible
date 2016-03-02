@@ -81,6 +81,12 @@ def render_hostfile():
 	render_template(remote_machines, "hostfile.j2", outfile)
 	print "===The hostfile located at CUR_DIR/hostfile==="
 
+def render_cluster_env():
+	print "===Rendering environments for cluster from j2 templates==="	
+	outfile = os.path.join(current_dir, "cluster.yml")
+	render_template(remote_machines, "cluster.yml.j2", outfile)
+	print "===The cluster located at CUR_DIR/cluster==="
+
 if __name__ == "__main__":
 	if (len(argv)>1 and argv[1] == "destroy"):
 		clean_docker()
@@ -96,4 +102,5 @@ if __name__ == "__main__":
 		collect_remote_master_ips()
 		collect_remote_worker_ips()
 		render_hostfile()
+		render_cluster_env()
 	
